@@ -1,0 +1,14 @@
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\bin\Debug\net6.0\Domain.deps.json
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\bin\Debug\net6.0\Domain.dll
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\bin\Debug\net6.0\Domain.pdb
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.csproj.AssemblyReference.cache
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.Resources.ResourceData.resources
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.csproj.GenerateResource.cache
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.AssemblyInfoInputs.cache
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.AssemblyInfo.cs
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.csproj.CoreCompileInputs.cache
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.dll
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\refint\Domain.dll
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\Domain.pdb
+D:\ASPNET_MVC_PROJECTS\BookStore\Domain\obj\Debug\net6.0\ref\Domain.dll

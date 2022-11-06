@@ -1,0 +1,282 @@
+﻿@model RegisterViewModel
+
+@inject UserManager<ApplicationUser> _userManager;
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>@WebResource.UsersTableTitle</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">@WebResource.HomePage</a></li>
+                        <li class="breadcrumb-item active">@WebResource.ManageBook</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-start">
+                        <h3 class="card-title">@WebResource.UsersTableTitle</h3>
+                        <div class="card-tools">
+                            @if (TempData["Access"] != null && TempData["Access"]?.ToString() == "false")
+                            {
+                                <span class="alert alert-warning m-1 ml-4">@WebResource.AccessDenied</span>
+                            }
+                            @if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin")){
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-outline-primary rounded-pill ml-5" data-toggle="modal" data-target="#exampleModal" onclick="Reset()">
+                                    @WebResource.CreateNewUserBtn
+                                </button>
+
+                            }
+                            
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="usersTable" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <td style="width:10%">@WebResource.UserName</td>
+                                    <td style="width:15%">@WebResource.RoleName</tdstyle>
+                                    <td style="width:10%">@WebResource.UserImage</td>
+                                    <td style="width:18%">@WebResource.UserEmail</td>
+                                    <td style="width:7%">@WebResource.UserIsActive</td>
+                                    <td style="width:30%">@WebResource.Events</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.Users)
+                                {
+                                    <tr>
+                                        <td>@user.Name</td>
+                                        <td>
+                                            @switch (user.Role)
+                                            {
+                                                case "SuperAdmin":
+                                                    <span class="badge badge-danger" style="width:100px;height:25px;">@user.Role</span>
+                                                    break;
+                                                case "Admin":
+                                                    <span class="badge badge-success" style="width:100px;height:25px;">@user.Role</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge badge-warning" style="width:100px;height:25px;">@user.Role</span>
+                                                    break;
+                                            }
+                                            </td>
+                                        <td>
+                                            <img src="@Helper.UserImgPath/@user.UserImage" class="img-bordered img-circle" style="width:50px; height:50px;" />
+                                        </td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            <input type="checkbox" disabled checked="@user.IsActive" style="width:25px; height:25px;" />
+                                        </td>
+                                        <td>
+
+                                            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") 
+                                            || user.Id == _userManager.GetUserId(User))
+                                            {
+                                                <input type="button" class="btn btn-info btn-sm"
+                                               onclick="Edit('@user.Id', '@user.Name', '@user.UserImage', '@user.IsActive', '@user.Email', '@user.Role')"
+                                               value="@WebResource.EditBtn"
+                                               data-toggle="modal" data-target="#exampleModal" />
+                                            }
+                                            
+
+                                            @if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin")){
+                                                <input type="button" class="btn btn-danger btn-sm" onclick="Delete('@user.Id')" value="@WebResource.DeleteBtn" />
+                                            }
+
+                                            <input type="button" class="btn btn-success btn-sm" onclick="ChangePassword('@user.Id')"
+                                               value="@WebResource.ChangePassword" data-toggle="modal" data-target="#changePasswordModal" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="title">@WebResource.CreateNewUserBtn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Register" asp-controller="Accounts" method="post" enctype="multipart/form-data" >
+                    <div class="form-group">
+                        <input type="text" hidden id="userId" class="form-control" asp-for="NewRegister.Id" />
+                        <input type="text" hidden id="imageHide" class="form-control" asp-for="NewRegister.UserImage" />
+                        <label asp-for="NewRegister.Name" class="conrole-lable">@WebResource.UserName</label>
+                        <input type="text" id="userName" class="form-control" asp-for="NewRegister.Name" />
+                        <span asp-validation-for="NewRegister.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewRegister.Email" class="conrole-lable">@WebResource.UserEmail</label>
+                        <input type="text" id="userEmail" class="form-control" asp-for="NewRegister.Email" />
+                        <span asp-validation-for="NewRegister.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <img src="@Helper.UserImgPath/@Model.NewRegister.UserImage" class="img-bordered img-circle"
+                        style="width:50px; height:50px;" hidden id="image"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="conrole-lable">@WebResource.UserImage</label>
+                        <input type="file" name="ImageFile" id="userImage" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewRegister.RoleName" class="conrole-lable">@WebResource.RoleName</label>
+                        <select id="ddlUserRole" class="form-control" asp-for="NewRegister.RoleName" 
+                        asp-items="@(new SelectList(Model.Roles, "Name", "Name"))" >
+                            <option value="">@WebResource.SelectUserRole</option>
+                        </select>
+                        <span asp-validation-for="NewRegister.RoleName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewRegister.IsActive" class="conrole-lable">@WebResource.UserIsActive</label>
+                        <input type="checkbox" id="isActive" class="form-control" asp-for="NewRegister.IsActive" />
+                    </div>
+                    <div class="form-group" id="grPassword">
+                        <label asp-for="NewRegister.Password" class="conrole-lable">@WebResource.UserPassword</label>
+                        <input type="password" id="userPassword" class="form-control" asp-for="NewRegister.Password" />
+                        <span asp-validation-for="NewRegister.Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" id="grConfirmPassword">
+                        <label asp-for="NewRegister.ConfirmPassword" class="conrole-lable">@WebResource.UserConfirmPassword</label>
+                        <input type="password" id="userConfirmPassword" class="form-control" asp-for="NewRegister.ConfirmPassword" />
+                        <span asp-validation-for="NewRegister.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="modal-footer-rtl" style="padding:0 15px 15px 0">
+                        <input type="submit" id="btnSave" class="btn btn-primary" value="@WebResource.SaveBtn" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@WebResource.Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="title">@WebResource.ChangePassword</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="ChangePassword" asp-controller="Accounts" method="post">
+                    <div class="form-group">
+                        <input type="text" hidden id="changePasswordId" class="form-control" asp-for="ChangePassword.Id" />
+                        <label asp-for="ChangePassword.NewPassword" class="conrole-lable">@WebResource.UserPassword</label>
+                        <input type="password" class="form-control" asp-for="ChangePassword.NewPassword" />
+                        <span asp-validation-for="ChangePassword.NewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ChangePassword.ConfirmPassword" class="conrole-lable">@WebResource.UserConfirmPassword</label>
+                        <input type="password" class="form-control" asp-for="ChangePassword.ConfirmPassword" />
+                        <span asp-validation-for="ChangePassword.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer-rtl" style="padding:0 15px 15px 0">
+                        <input type="submit" id="btnSave" class="btn btn-primary" value="@WebResource.SaveBtn" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@WebResource.Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Script{
+    @*@{
+        var msgType = Context.Session.GetString("msgType");
+        var title = Context.Session.GetString("title");
+        var msg = Context.Session.GetString("msg");
+
+        Context.Session.SetString("msgType", ""); 
+    }*@
+    @if (!string.IsNullOrEmpty(Context.Session.GetString(Helper.MsgType)))
+    {
+    if (Context.Session.GetString(Helper.MsgType) == Helper.Success)
+        {
+            <script>
+
+                Swal.fire({
+                    title: '@Context.Session.GetString(Helper.Title)',
+                    text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
+                    confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
+                    icon: '@Html.Raw(Helper.Success)'
+                });
+            </script>
+        }
+        else{
+            <script>
+                Swal.fire({
+                    title: '@Context.Session.GetString(Helper.Title)',
+                    text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
+                    confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
+                    icon: '@Html.Raw(Helper.Error)'
+                });
+
+            </script>
+        }
+        Context.Session.SetString(Helper.MsgType, "");
+    }
+
+    <script src="~/Modules/Register.js"></script>
+
+    <script>
+        let EditBtn = '@Html.Raw(WebResource.EditBtn)';
+        let EditUser = '@Html.Raw(WebResource.EditUser)';
+        let CreateNewUser = '@Html.Raw(WebResource.CreateNewUserBtn)';
+        let SaveBtn = '@Html.Raw(WebResource.SaveBtn)';
+
+        let UserImgPath = '@Html.Raw(Helper.UserImgPath)';
+        let SuccessWord = '@Html.Raw(Helper.Success)';
+
+        let DeleteConfirm = '@Html.Raw(WebResource.Delete)';
+        let DeleteRoleMsg = '@Html.Raw(WebResource.DeleteRoleMsg)';
+        let AreYouSure = '@Html.Raw(WebResource.AreYouSure)'
+        let AreYouSureMsg = '@Html.Raw(WebResource.AreYouSureMsg)';
+        let YesBtn = '@Html.Raw(WebResource.YesBtn)';
+        let NoBtn = '@Html.Raw(WebResource.NoBtn)';
+    </script>
+}
