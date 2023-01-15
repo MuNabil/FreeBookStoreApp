@@ -1,4 +1,5 @@
 ﻿using Booky.Resources;
+using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.ViewModel;
@@ -6,12 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace Booky.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Permissions.Accounts.View)]
     public class AccountsController : Controller
     {
         #region Declaration
@@ -60,6 +60,7 @@ namespace Booky.Areas.Admin.Controllers
 
         }
 
+        [Authorize(Permissions.Accounts.View)]
         public async Task<IActionResult> Register()
         {
             var roles = await _roleManager.Roles.OrderBy(r => r.Name).ToListAsync();
@@ -78,7 +79,7 @@ namespace Booky.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "SuperAdmin, Admin, User")]
+        [Authorize(Permissions.Accounts.Create)]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -190,7 +191,7 @@ namespace Booky.Areas.Admin.Controllers
         }
 
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Permissions.Accounts.Delete)]
         public async Task<IActionResult> DeleteUser(string Id)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == Id);
@@ -206,7 +207,7 @@ namespace Booky.Areas.Admin.Controllers
             return RedirectToAction(nameof(Register));
         }
 
-
+        [Authorize(Permissions.Accounts.Create)]
         public async Task<IActionResult> ChangePassword(RegisterViewModel model)
         {
             if (model.ChangePassword.Id == _userManager.GetUserId(User)
@@ -233,7 +234,7 @@ namespace Booky.Areas.Admin.Controllers
             return RedirectToAction(nameof(Register));
         }
 
-
+        [Authorize(Permissions.Roles.View)]
         public async Task<IActionResult> Roles()
         {
             var roles = await _roleManager.Roles.OrderBy(r => r.Name).ToListAsync();
@@ -242,7 +243,7 @@ namespace Booky.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Permissions.Roles.Create)]
         public async Task<IActionResult> Roles(RolesViewModel model)
         {
             if (!ModelState.IsValid)
@@ -294,7 +295,7 @@ namespace Booky.Areas.Admin.Controllers
         }
 
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
+        [Authorize(Permissions.Roles.Delete)]
         public async Task<IActionResult> DeleteRole(string Id)
         {
             var role = await _roleManager.Roles.SingleOrDefaultAsync(r => r.Id == Id);
@@ -311,6 +312,7 @@ namespace Booky.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

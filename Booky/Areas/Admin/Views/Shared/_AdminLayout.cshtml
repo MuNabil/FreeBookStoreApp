@@ -1,8 +1,13 @@
 ﻿@inject UserManager<ApplicationUser> _userManager;
-@inject SignInManager<ApplicationUser> _signInManager
+@inject SignInManager<ApplicationUser> _signInManager;
+
+@using Domain.Constants
+@using Microsoft.AspNetCore.Authorization;
+@inject IAuthorizationService AuthorizationService;
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,6 +49,7 @@
     <!-- Responsive RTL -->
     <link rel="stylesheet" href="~/Admin/dist/css/responsive-rtl.css">
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
@@ -65,7 +71,8 @@
             <!-- SEARCH FORM -->
             <form class="form-inline ml-3">
                 <div class="input-group input-group-sm">
-                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                        aria-label="Search">
                     <div class="input-group-append">
                         <button class="btn btn-navbar" type="submit">
                             <i class="fas fa-search"></i>
@@ -86,7 +93,8 @@
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="~/Admin/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                                <img src="~/Admin/dist/img/user1-128x128.jpg" alt="User Avatar"
+                                    class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         Brad Diesel
@@ -102,7 +110,8 @@
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="~/Admin/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="~/Admin/dist/img/user8-128x128.jpg" alt="User Avatar"
+                                    class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         John Pierce
@@ -118,11 +127,13 @@
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="~/Admin/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="~/Admin/dist/img/user3-128x128.jpg" alt="User Avatar"
+                                    class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         Nora Silvester
-                                        <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                                        <span class="float-right text-sm text-warning"><i
+                                                class="fas fa-star"></i></span>
                                     </h3>
                                     <p class="text-sm">The subject goes here</p>
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
@@ -173,8 +184,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="~/Admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                     style="opacity: .8">
+                <img src="~/Admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">AdminLTE 3</span>
             </a>
 
@@ -185,13 +196,15 @@
                     @if (_signInManager.IsSignedIn(User))
                     {
                         <div class="image">
-                            <img src="@Helper.UserImgPath/@((await _userManager.GetUserAsync(User)).UserImage)" class="img-circle elevation-2" alt="User Image">
+                            <img src="@Helper.UserImgPath/@((await _userManager.GetUserAsync(User)).UserImage)"
+                            class="img-circle elevation-2" alt="User Image">
                         </div>
                         <div class="info">
                             <a href="#" class="d-block">@((await _userManager.GetUserAsync(User)).Name)</a>
 
                             <form asp-action="Logout" asp-controller="Accounts" method="post">
-                                <input type="submit" value="@WebResource.Logout" style="color:orange; border:none; background:#343a40" />
+                                <input type="submit" value="@WebResource.Logout"
+                                style="color:orange; border:none; background:#343a40" />
                             </form>
                         </div>
                     }
@@ -199,7 +212,8 @@
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview menu-open">
@@ -211,24 +225,38 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="/Admin/Accounts/Roles" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>@WebResource.RolesTableTitle</p>
-                                    </a>
-                                </li>
+                                @if (AuthorizationService.AuthorizeAsync(User,
+                                Permissions.Roles.View).Result.Succeeded)
+                                {
+                                    <li class="nav-item">
+                                        <a href="/Admin/Accounts/Roles" class="nav-link active">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>@WebResource.RolesTableTitle</p>
+                                        </a>
+                                    </li>
+                                }
+
+                                 @if (AuthorizationService.AuthorizeAsync(User,
+                                Permissions.Accounts.View).Result.Succeeded)
+                                {
                                 <li class="nav-item">
                                     <a href="/Admin/Accounts/Register" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>@WebResource.UsersTableTitle</p>
                                     </a>
                                 </li>
+                                }
+
+                                 @if (AuthorizationService.AuthorizeAsync(User,
+                                Permissions.Categories.View).Result.Succeeded)
+                                {
                                 <li class="nav-item">
                                     <a href="/Admin/Categories/Categories" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>@WebResource.CategoryTableTitle</p>
                                     </a>
                                 </li>
+                                }
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -725,4 +753,5 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     @await RenderSectionAsync("Script", required: false);
 </body>
+
 </html>

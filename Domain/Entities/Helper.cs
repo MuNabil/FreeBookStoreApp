@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,10 +24,28 @@ namespace Domain.Entities
         public const string Update = "Update";
         public const string Delete = "Delete";
 
+        public const string Permission = "Permission";
+
         public enum eCurrentState
         {
             Delete = 0,
             Active = 1
+        }
+
+        public enum Roles
+        {
+            SuperAdmin,
+            Admin,
+            Basic
+        }
+
+        public enum PermissionModules
+        {
+            Home,
+            Accounts,
+            Roles,
+            Registers,
+            Categories
         }
     }
 }

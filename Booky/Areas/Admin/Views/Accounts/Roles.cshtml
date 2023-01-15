@@ -14,7 +14,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">@WebResource.HomePage</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Home"
+                                asp-action="Index">@WebResource.HomePage</a></li>
                         <li class="breadcrumb-item active">@WebResource.ManageBook</li>
                     </ol>
                 </div>
@@ -30,12 +31,14 @@
                     <div class="card-header d-flex align-items-center justify-content-start">
                         <h3 class="card-title">@WebResource.RolesTableTitle</h3>
                         <div class="card-tools">
-                            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin")){
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-outline-primary rounded-pill ml-5" data-toggle="modal" data-target="#exampleModal" onclick="Reset()">
-                                    @WebResource.CreateNewRoleBtn
-                                </button>
-                            }
+                            @* @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                { *@
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-outline-primary rounded-pill ml-5" data-toggle="modal"
+                                data-target="#exampleModal" onclick="Reset()">
+                                @WebResource.CreateNewRoleBtn
+                            </button>
+                            @* } *@
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -55,25 +58,40 @@
                                             @switch (role.Name)
                                             {
                                                 case "SuperAdmin":
-                                                    <span class="badge badge-danger" style="width:250px;height:25px;">@role.Name</span>
+                                                    <span class="badge badge-danger"
+                                            style="width:250px;height:25px;">@role.Name</span>
                                                     break;
                                                 case "Admin":
-                                                    <span class="badge badge-success" style="width:250px;height:25px;">@role.Name</span>
+                                                    <span class="badge badge-success"
+                                            style="width:250px;height:25px;">@role.Name</span>
                                                     break;
                                                 default:
-                                                    <span class="badge badge-warning" style="width:250px;height:25px;">@role.Name</span>
+                                                    <span class="badge badge-warning"
+                                            style="width:250px;height:25px;">@role.Name</span>
                                                     break;
                                             }
                                         </td>
                                         @*@if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin")){
                                             <td>
-                                                <input type="button" class="btn btn-info btn-sm" onclick="Edit('@role.Id', '@role.Name')" value="@WebResource.EditBtn" data-toggle="modal" data-target="#exampleModal" />
-                                                <input type="button" class="btn btn-danger btn-sm" onclick="Delete('@role.Id')" value="@WebResource.DeleteBtn" />
+                                            <input type="button" class="btn btn-info btn-sm" onclick="Edit('@role.Id',
+                                            '@role.Name')" value="@WebResource.EditBtn" data-toggle="modal"
+                                            data-target="#exampleModal" />
+                                            <input type="button" class="btn btn-danger btn-sm" onclick="Delete('@role.Id')"
+                                            value="@WebResource.DeleteBtn" />
                                             </td>
-                                        }*@
+                                            }*@
                                         <td>
-                                            <input type="button" class="btn btn-info btn-sm" onclick="Edit('@role.Id', '@role.Name')" value="@WebResource.EditBtn" data-toggle="modal" data-target="#exampleModal" />
-                                            <input type="button" class="btn btn-danger btn-sm" onclick="Delete('@role.Id')" value="@WebResource.DeleteBtn" />
+                                            <input type="button" class="btn btn-info btn-sm"
+                                            onclick="Edit('@role.Id', '@role.Name')" value="@WebResource.EditBtn"
+                                            data-toggle="modal" data-target="#exampleModal" />
+
+                                            <input type="button" class="btn btn-danger btn-sm" onclick="Delete('@role.Id')"
+                                            value="@WebResource.DeleteBtn" />
+
+                                            <a class="btn btn-success btn-sm" asp-action="ManagePermissions"
+                                            asp-controller="Permissions" asp-route-roleId="@role.Id">
+                                                @WebResource.AddPermissionsBtn
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -95,7 +113,8 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -108,9 +127,11 @@
                 <form asp-action="Roles" asp-controller="Accounts" method="post">
                     <div class="form-group">
                         <input type="text" hidden id="roleId" class="form-control" asp-for="NewRole.RoleId" />
+
                         <label asp-for="NewRole.RoleName" class="conrole-lable">@WebResource.RoleName</label>
                         <input type="text" id="roleName" class="form-control" asp-for="NewRole.RoleName" />
                         <span asp-validation-for="NewRole.RoleName" class="text-danger"></span>
+
                     </div>
                     <div class="modal-footer-rtl" style="padding:0 15px 15px 0">
                         <input type="submit" id="btnSave" class="btn btn-primary" value="@WebResource.SaveBtn" />
@@ -124,57 +145,57 @@
 </div>
 
 @section Script{
-    @*@{
-        var msgType = Context.Session.GetString("msgType");
-        var title = Context.Session.GetString("title");
-        var msg = Context.Session.GetString("msg");
+@*@{
+    var msgType = Context.Session.GetString("msgType");
+    var title = Context.Session.GetString("title");
+    var msg = Context.Session.GetString("msg");
 
-        Context.Session.SetString("msgType", ""); 
+    Context.Session.SetString("msgType", "");
     }*@
-    @if (!string.IsNullOrEmpty(Context.Session.GetString(Helper.MsgType)))
-    {
-        if (Context.Session.GetString(Helper.MsgType) == Helper.Success)
-        {
-            <script>
+@if (!string.IsNullOrEmpty(Context.Session.GetString(Helper.MsgType)))
+{
+if (Context.Session.GetString(Helper.MsgType) == Helper.Success)
+{
+<script>
 
-                Swal.fire({
-                    title: '@Context.Session.GetString(Helper.Title)',
-                    text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
-                    confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
-                    icon: '@Html.Raw(Helper.Success)'
-                });
-            </script>
-        }
-        else{
-            <script>
-                Swal.fire({
-                    title: '@Context.Session.GetString(Helper.Title)',
-                    text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
-                    confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
-                    icon: '@Html.Raw(Helper.Error)'
-                });
+    Swal.fire({
+        title: '@Context.Session.GetString(Helper.Title)',
+        text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
+        confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
+        icon: '@Html.Raw(Helper.Success)'
+    });
+</script>
+}
+else{
+<script>
+    Swal.fire({
+        title: '@Context.Session.GetString(Helper.Title)',
+        text: '@Html.Raw(Context.Session.GetString(Helper.Msg))',
+        confirmButtonText: '@Html.Raw(WebResource.OkMsg)',
+        icon: '@Html.Raw(Helper.Error)'
+    });
 
-            </script>
-        }
-        Context.Session.SetString(Helper.MsgType, "");
-    }
+</script>
+}
+Context.Session.SetString(Helper.MsgType, "");
+}
 
-    <script src="~/Modules/Roles.js"></script>
+<script src="~/Modules/Roles.js"></script>
 
-    <script>
-        let EditBtn = '@Html.Raw(WebResource.EditBtn)';
-        let EditUserRole = '@Html.Raw(WebResource.EditUserRole)';
-        let CreateNewRole = '@Html.Raw(WebResource.CreateNewRoleBtn)';
-        let SaveBtn = '@Html.Raw(WebResource.SaveBtn)';
+<script>
+    let EditBtn = '@Html.Raw(WebResource.EditBtn)';
+    let EditUserRole = '@Html.Raw(WebResource.EditUserRole)';
+    let CreateNewRole = '@Html.Raw(WebResource.CreateNewRoleBtn)';
+    let SaveBtn = '@Html.Raw(WebResource.SaveBtn)';
 
-        let UserImgPath = '@Html.Raw(Helper.UserImgPath)';
-        let SuccessWord = '@Html.Raw(Helper.Success)';
-         
-        let DeleteConfirm = '@Html.Raw(WebResource.Delete)';
-        let DeleteRoleMsg = '@Html.Raw(WebResource.DeleteRoleMsg)';
-        let AreYouSure = '@Html.Raw(WebResource.AreYouSure)';
-        let AreYouSureMsg = '@Html.Raw(WebResource.AreYouSureMsg)';
-        let YesBtn = '@Html.Raw(WebResource.YesBtn)';
-        let NoBtn = '@Html.Raw(WebResource.NoBtn)';
-    </script>
+    let UserImgPath = '@Html.Raw(Helper.UserImgPath)';
+    let SuccessWord = '@Html.Raw(Helper.Success)';
+
+    let DeleteConfirm = '@Html.Raw(WebResource.Delete)';
+    let DeleteRoleMsg = '@Html.Raw(WebResource.DeleteRoleMsg)';
+    let AreYouSure = '@Html.Raw(WebResource.AreYouSure)';
+    let AreYouSureMsg = '@Html.Raw(WebResource.AreYouSureMsg)';
+    let YesBtn = '@Html.Raw(WebResource.YesBtn)';
+    let NoBtn = '@Html.Raw(WebResource.NoBtn)';
+</script>
 }

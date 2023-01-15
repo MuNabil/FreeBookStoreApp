@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uLaZRHQLbD+E3RSxBqb4EckjH7MujFHJR1D4CfgnuguLllqRkx9EVf+JLlNYnlZrHhilrLmDc9FibP/x8AFQ5w==",
+  "dgSpecHash": "2u2tdb/atU3QFhDmANKCRiRpJ8t3BAsxdMp92uLtUkuHbyZHUDD8fkBYXQWGEUWadKfLC+a98naMuUfBAMfBHA==",
   "success": true,
-  "projectFilePath": "D:\\ASPNET_MVC_PROJECTS\\BookStore\\Domain\\Domain.csproj",
+  "projectFilePath": "D:\\Projects\\ASPNET_MVC_PROJECTS\\BookStore\\Domain\\Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

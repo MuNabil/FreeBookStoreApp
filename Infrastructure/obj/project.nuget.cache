@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YZwSrdBH3HfnF4etB5WhCU+CX3g4p9nHVkXz7uYc1Y1kbSm83VNVo98xp4a/p+gAChXz8ta5FjtK78/Z7NNxrw==",
+  "dgSpecHash": "qgdVIHabGleLNUXiRfl7GAqb78t9ma/NmYNnBO8yj/KKA2P4QisF6viAuoakRSvvaJOcSyL3G3ZIgG2mnWLJ0w==",
   "success": true,
-  "projectFilePath": "D:\\ASPNET_MVC_PROJECTS\\BookStore\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "D:\\Projects\\ASPNET_MVC_PROJECTS\\BookStore\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nabil\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\nabil\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.10\\microsoft.aspnetcore.cryptography.internal.6.0.10.nupkg.sha512",

@@ -53,7 +53,6 @@
     value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
-
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
@@ -303,4 +302,14 @@
   <data name="YesBtn" xml:space="preserve">
     <value>نعم</value>
   </data>
+  <data name="AddPermissionsBtn"
+          xml:space="preserve">
+        <value>اضف صلاحيات</value>
+        <comment />
+    </data>
+  <data name="ManagePermission"
+          xml:space="preserve">
+        <value>ادارة الصلاحيات ل</value>
+        <comment />
+    </data>
 </root>

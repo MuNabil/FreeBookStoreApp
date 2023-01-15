@@ -1,13 +1,16 @@
 ﻿using Booky.Resources;
+using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.IRepositories;
 using Infrastructure.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booky.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Permissions.Categories.View)]
     public class CategoriesController : Controller
     {
         private readonly IServicesRepository<Category> _servicesCategory;
@@ -21,13 +24,20 @@ namespace Booky.Areas.Admin.Controllers
             _logCategory = logCategory;
             _userManager = userManager;
         }
+
+        [Authorize(Permissions.Categories.View)]
         public IActionResult Categories()
         {
-            var categories = _servicesCategory.GetAll();
-            var logCategories = _logCategory.GetAll();
-            return View(new CategoryViewModel { Categories = categories, LogCategories = logCategories, NewCategory = new Category() });
+            return View(
+                new CategoryViewModel
+                {
+                    Categories = _servicesCategory.GetAll(),
+                    LogCategories = _logCategory.GetAll(),
+                    NewCategory = new Category()
+                });
         }
 
+        [Authorize(Permissions.Categories.Delete)]
         public IActionResult DeleteLog(Guid Id)
         {
             if (_logCategory.DeleteLog(Id))
@@ -36,6 +46,7 @@ namespace Booky.Areas.Admin.Controllers
             return RedirectToAction(nameof(Categories));
         }
 
+        [Authorize(Permissions.Categories.Delete)]
         public IActionResult Delete(Guid Id)
         {
             var userId = _userManager.GetUserId(User);
@@ -47,6 +58,7 @@ namespace Booky.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Permissions.Categories.Create)]
         public IActionResult Save(CategoryViewModel model)
         {
             if (!ModelState.IsValid)
